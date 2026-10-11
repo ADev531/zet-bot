@@ -71,13 +71,18 @@ client.once(Events.ClientReady, async(readyClient) => {
 
     await prepare(readyClient);
 
+    if (!process.env.APPLICATION_ID || !process.env.GUILD_ID) {
+        console.log("[zet-bot] APPLICATION_ID 및 GUILD_ID 환경 변수가 제대로 설정되었는지 확인하여 주십시오.");
+        return;
+    }
+
     try {
-        rest.put(Routes.applicationCommands("1553744240951955456"), {
+        rest.put(Routes.applicationCommands(process.env.APPLICATION_ID), {
             "body": [
                 verifyCommand.toJSON()
             ]
         });
-        rest.put(Routes.applicationGuildCommands("1553744240951955456", "1535915746952089691"), {
+        rest.put(Routes.applicationGuildCommands(process.env.APPLICATION_ID, process.env.GUILD_ID), {
             "body": [
                 verificationDoneCommand.toJSON(),
                 zetaCommand.toJSON()
