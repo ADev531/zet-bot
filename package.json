@@ -1,0 +1,25 @@
+{
+  "name": "zet-bot",
+  "version": "1.0.0",
+  "description": "제타 비공식 커뮤니티를 위한 봇입니다.",
+  "author": "adev531",
+  "type": "module",
+  "main": "dist/bot.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc && tsc-alias",
+    "start": "node --env-file=.env dist/bot.js",
+    "dev": "DEVMODE=1 nodemon --watch 'src/**/*.ts' --exec 'tsx' --env-file=.env src/bot.ts"
+  },
+  "dependencies": {
+    "discord.js": "^14.27.0",
+    "redis": "^6.3.0"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.5",
+    "@types/redis": "^4.0.10",
+    "tsc-alias": "^1.9.7",
+    "tsx": "^4.23.15",
+    "typescript": "^7.0.2"
+  }
+}
