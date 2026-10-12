@@ -18,10 +18,10 @@ import { Client, Events, GatewayIntentBits, SlashCommandBuilder, Routes, ButtonB
 import { prepare, redisClient } from "@/global.js";
 import zeta from "@/commands/zeta.js";
 import verify from "@/commands/verify.js";
-import verificationDone from "@/commands/verificationDone.js";
 import verifyModal from "@/modalHandlers/verifyModal.js";
 import completeVerificationModal from "@/modalHandlers/completeVerificationModal.js";
 import guildMemberAdd from "@/events/guildMemberAdd.js";
+import denyVerificationModal from "@/modalHandlers/denyVerificationModal.js";
 
 if (!process.env.TOKEN) {
     console.log("[zet-bot] TOKEN 환경 변수가 없습니다.");
@@ -42,20 +42,6 @@ const rest = client.rest;
 const verifyCommand = new SlashCommandBuilder()
     .setName("인증")
     .setDescription("인증 절차를 재실시합니다.");
-
-const verificationDoneCommand = new SlashCommandBuilder()
-    .setName("인증완료")
-    .setDescription("인증을 완료합니다. 행정팀 이상만 사용 가능합니다.")
-    .addUserOption(function(option) {
-        return option.setName("유저")
-            .setDescription("인증을 완료시킬 유저")
-            .setRequired(true);
-    })
-    .addStringOption(function(option) {
-        return option.setName("핸들")
-            .setDescription("해당 유저의 핸들")
-            .setRequired(true);
-    });
 
 const zetaCommand = new SlashCommandBuilder()
     .setName("제타")
@@ -84,7 +70,6 @@ client.once(Events.ClientReady, async(readyClient) => {
         });
         rest.put(Routes.applicationGuildCommands(process.env.APPLICATION_ID, process.env.GUILD_ID), {
             "body": [
-                verificationDoneCommand.toJSON(),
                 zetaCommand.toJSON()
             ]
         });
@@ -123,12 +108,14 @@ client.on(Events.InteractionCreate, async(interaction) => {
             case "completeVerificationModal":
                 completeVerificationModal(interaction, client);
                 break;
+            case "denyVerificationModal":
+                denyVerificationModal(interaction, client);
+                break;
         }
 
         return;
     }
     else if (interaction.isButton()) {
-        const mentionRegex = /<@([0-9]*)>/;
         switch (interaction.customId) {
             case "completeVerification":
             {
@@ -162,28 +149,31 @@ client.on(Events.InteractionCreate, async(interaction) => {
             }
             case "denyVerification":
             {
-                const regexResult = mentionRegex.exec(interaction.message.content);
+                const msgIdInput = new TextInputBuilder()
+                    .setCustomId("messageId")
+                    .setStyle(TextInputStyle.Short)
+                    .setValue(interaction.message.id)
+                    .setRequired(true);
+                const idInputLabel = new LabelBuilder()
+                    .setLabel("메시지 ID")
+                    .setDescription("인증 거부에 필요한 정보에요. 수정하시면 제대로 작동하지 않아요!")
+                    .setTextInputComponent(msgIdInput);
 
-                if (!regexResult || !regexResult[1]) {
-                    await interaction.message.edit("알 수 없는 오류가 발생해, 인증 절차를 다시 실시해야 해요.\n(원본 메시지: " + interaction.message.content + ")");
-                    break;
-                }
+                const reasonInput = new TextInputBuilder()
+                    .setCustomId("reason")
+                    .setStyle(TextInputStyle.Short)
+                    .setRequired(true);
+                const reasonInputLabel = new LabelBuilder()
+                    .setLabel("사유")
+                    .setDescription("요청 거부의 사유를 입력해 주세요.")
+                    .setTextInputComponent(reasonInput);
 
-                const user = await client.users.fetch(regexResult[1]);
-
-                await interaction.message.edit({
-                    "content": "<@" + user.id + ">님 인증 거부 처리 (" + new Intl.DateTimeFormat().format(Date.now()) + ")",
-                    "components": []
-                });
-
-                let dm = user.dmChannel;
-
-                if (!dm) {
-                    dm = await user.createDM(true);
-                }
-
-                await dm.send("인증 요청이 거부되었어요. DM에서 `/인증` 커맨드를 실행해 인증 절차를 재실시해주세요.");
-                break;
+                const completeVerificationModal = new ModalBuilder()
+                    .setCustomId("denyVerificationModal")
+                    .setTitle("인증 거부하기")
+                    .addLabelComponents(idInputLabel, reasonInputLabel);
+                
+                await interaction.showModal(completeVerificationModal);
             }
         }
         
@@ -192,9 +182,6 @@ client.on(Events.InteractionCreate, async(interaction) => {
     else if (interaction.isChatInputCommand()){
         if (interaction.commandName === "인증") {
             verify(interaction);
-        }
-        else if (interaction.commandName === "인증완료") {
-            verificationDone(interaction);
         }
         else if (interaction.commandName === "제타") {
             zeta(interaction);
