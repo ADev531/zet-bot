@@ -33,5 +33,6 @@ export default async function completeVerificationModal(interaction: ModalSubmit
         dm = await user.createDM(true);
     }
 
-    dm.send("계정 인증이 완료되었어요!");
+    await dm.send("계정 인증이 완료되었어요!");
+    await interaction.reply("계정 인증을 완료하였습니다.");
 }
