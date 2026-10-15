@@ -1,7 +1,7 @@
 import { ModalSubmitInteraction, CacheType, MessageFlags, ContainerComponentData, ActionRowData, ButtonBuilder, ButtonStyle, ActionRowBuilder } from "discord.js";
 import { requestChannel } from "@/global.js";
 
-export default async function verifyModal(interaction: ModalSubmitInteraction<CacheType>, viaCommand: boolean) {
+export default async function verifyModal(interaction: ModalSubmitInteraction<CacheType>) {
     const uploadedFiles = interaction.fields.getUploadedFiles("screenshot");
 
     if (!uploadedFiles) {
@@ -19,7 +19,7 @@ export default async function verifyModal(interaction: ModalSubmitInteraction<Ca
         return;
     }
 
-    if (!viaCommand) {
+    if (interaction.customId === "verifyModal") {
         const messageId = interaction.fields.getTextInputValue("messageId");
         try {
             const dm = interaction.user.dmChannel;

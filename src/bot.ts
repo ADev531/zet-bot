@@ -1,10 +1,8 @@
 import { Client, Events, GatewayIntentBits, Routes, LabelBuilder, ModalBuilder, TextInputBuilder, TextInputStyle, ActivityType, SlashCommandBuilder } from "discord.js";
 import { prepare } from "@/global.js";
 import { guildCommands, dmCommands } from "@/commands/index.js"; 
-import verifyModal from "@/modalHandlers/verifyModal.js";
-import completeVerificationModal from "@/modalHandlers/completeVerificationModal.js";
+import { modalHandlers } from "@/modalHandlers/index.js";
 import guildMemberAdd from "@/events/guildMemberAdd.js";
-import denyVerificationModal from "@/modalHandlers/denyVerificationModal.js";
 
 if (!process.env.TOKEN) {
     console.log("[zet-bot] TOKEN 환경 변수가 없습니다.");
@@ -68,22 +66,9 @@ client.on(Events.GuildMemberAdd, guildMemberAdd);
 
 client.on(Events.InteractionCreate, async(interaction) => {
     if (interaction.isModalSubmit()) {
-        switch (interaction.customId) {
-            case "verifyModal":
-                verifyModal(interaction, false);
-                break;
-            case "verifyCommandModal":
-                verifyModal(interaction, true);
-                break;
-            case "completeVerificationModal":
-                completeVerificationModal(interaction, client);
-                break;
-            case "denyVerificationModal":
-                denyVerificationModal(interaction, client);
-                break;
+        if (modalHandlers[interaction.customId]) {
+            modalHandlers[interaction.customId](interaction);
         }
-
-        return;
     }
     else if (interaction.isButton()) {
         switch (interaction.customId) {
@@ -147,8 +132,6 @@ client.on(Events.InteractionCreate, async(interaction) => {
                 await interaction.showModal(completeVerificationModal);
             }
         }
-        
-        return;
     }
     else if (interaction.isChatInputCommand()){
         if (guildCommands[interaction.commandName]) {

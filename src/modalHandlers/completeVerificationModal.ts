@@ -1,9 +1,9 @@
 import { ModalSubmitInteraction, CacheType, MessageFlags, ContainerComponentData, ActionRowData, ButtonBuilder, ButtonStyle, ActionRowBuilder, Client } from "discord.js";
-import { requestChannel, redisClient } from "@/global.js";
+import { requestChannel, redisClient, botClient } from "@/global.js";
 
 const mentionRegex = /<@([0-9]*)>/;
 
-export default async function completeVerificationModal(interaction: ModalSubmitInteraction<CacheType>, client: Client) {
+export default async function completeVerificationModal(interaction: ModalSubmitInteraction<CacheType>) {
     const messageId = interaction.fields.getTextInputValue("messageId");
     let zetaHandle = interaction.fields.getTextInputValue("zetaHandle");
 
@@ -19,7 +19,7 @@ export default async function completeVerificationModal(interaction: ModalSubmit
         zetaHandle = "@" + zetaHandle;
     }
 
-    const user = await client.users.fetch(regexResult[1]);
+    const user = await botClient.users.fetch(regexResult[1]);
 
     await redisClient.set("zetaHandle:" + user.id, zetaHandle);
     await message.edit({

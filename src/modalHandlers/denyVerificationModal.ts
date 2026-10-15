@@ -1,9 +1,9 @@
 import { ModalSubmitInteraction, CacheType, MessageFlags, ContainerComponentData, ActionRowData, ButtonBuilder, ButtonStyle, ActionRowBuilder, Client } from "discord.js";
-import { requestChannel, redisClient } from "@/global.js";
+import { requestChannel, botClient } from "@/global.js";
 
 const mentionRegex = /<@([0-9]*)>/;
 
-export default async function denyVerificationModal(interaction: ModalSubmitInteraction<CacheType>, client: Client) {
+export default async function denyVerificationModal(interaction: ModalSubmitInteraction<CacheType>) {
     const messageId = interaction.fields.getTextInputValue("messageId");
     let reason = interaction.fields.getTextInputValue("reason");
 
@@ -15,7 +15,7 @@ export default async function denyVerificationModal(interaction: ModalSubmitInte
         return;
     }
 
-    const user = await client.users.fetch(regexResult[1]);
+    const user = await botClient.users.fetch(regexResult[1]);
 
     await message.edit({
         "content": "<@" + user.id + ">님 인증 거부 처리 (" + new Intl.DateTimeFormat().format(Date.now()) + ")\n사유: " + reason,
