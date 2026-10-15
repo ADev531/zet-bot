@@ -68,5 +68,5 @@ export default async function verifyCommand(interaction: ChatInputCommandInterac
         .setTitle("인증하기")
         .addLabelComponents(uploadLabel);
     
-    await interaction.showModal(verifyModal);
+    await interaction.showModal(verifyModal, { "withResponse": !interaction.replied });
 }
