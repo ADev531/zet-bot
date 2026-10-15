@@ -1,4 +1,4 @@
-import { Client, Events, GatewayIntentBits, Routes, LabelBuilder, ModalBuilder, TextInputBuilder, TextInputStyle, ActivityType, SlashCommandBuilder } from "discord.js";
+import { Client, Events, GatewayIntentBits, Routes, LabelBuilder, ModalBuilder, TextInputBuilder, TextInputStyle, ActivityType } from "discord.js";
 import { prepare } from "@/global.js";
 import { guildCommands, dmCommands } from "@/commands/index.js"; 
 import { modalHandlers } from "@/modalHandlers/index.js";

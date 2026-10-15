@@ -15,7 +15,7 @@ export default async function guildMemberAdd(member: GuildMember) {
             });
         })
         .addTextDisplayComponents(function(text) {
-            return text.setContent("제타 비공식 커뮤니티에 오신 걸 진심으로 환영합니다! 아래 명시된 대로 **계정 인증 절차**를 거쳐 주세요.\n**제타 계정**이 있으시다면 **인증하기** 버튼을, 없으시다면 **제타 계정이 없어요!** 버튼을 눌러주세요.\n\n**(3분 안에 선택하지 않으실 경우, 미인증 상태로 남게 돼요.)**");
+            return text.setContent("제타 비공식 커뮤니티에 오신 걸 진심으로 환영합니다! 먼저, 아래 명시된 대로 **계정 인증 절차**를 거쳐 주세요.\n**제타 계정**이 있으시다면 **인증하기** 버튼을, 없으시다면 **제타 계정이 없어요!** 버튼을 눌러주세요.\n\n**(3분 안에 선택하지 않으실 경우, 미인증 상태로 남게 돼요.)**");
         })
         .addSeparatorComponents(function(seperator) {
             return seperator;
@@ -92,7 +92,7 @@ export default async function guildMemberAdd(member: GuildMember) {
         }
 
         container.addTextDisplayComponents(function(text) {
-            return text.setContent("-# 인증이 3분 이내에 진행되지 않아 취소되었어요! 인증 절차를 다시 밟으시려면 DM에서 `/인증` 커맨드를 실행해주세요.")
+            return text.setContent("-# 인증이 3분 이내에 진행되지 않아 취소되었어요! 인증 절차를 다시 밟으시려면 DM에서 `/인증` 커맨드를 실행해주시고, 제타 계정이 없으시다면 <#1536344624640299049> 채널에서 말씀해주세요.");
         });
 
         await msg.edit({
