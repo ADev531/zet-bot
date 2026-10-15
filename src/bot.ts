@@ -1,4 +1,4 @@
-import { Client, Events, GatewayIntentBits, Routes, LabelBuilder, ModalBuilder, TextInputBuilder, TextInputStyle, ActivityType } from "discord.js";
+import { Client, Events, GatewayIntentBits, Routes, LabelBuilder, ModalBuilder, TextInputBuilder, TextInputStyle, ActivityType, SlashCommandBuilder } from "discord.js";
 import { prepare } from "@/global.js";
 import { guildCommands, dmCommands } from "@/commands/index.js"; 
 import verifyModal from "@/modalHandlers/verifyModal.js";
@@ -33,11 +33,15 @@ client.once(Events.ClientReady, async(readyClient) => {
     }
 
     try {
+        const guildCommandDefines = Object.values(guildCommands).map(function(command) { return command.define; });
+        const dmCommandDefines = Object.values(dmCommands).map(function(command) { return command.define; });
+
         rest.put(Routes.applicationGuildCommands(process.env.APPLICATION_ID, process.env.GUILD_ID), {
-            "body": guildCommands
+            "body": guildCommandDefines
         });
+
         rest.put(Routes.applicationCommands(process.env.APPLICATION_ID), {
-            "body": dmCommands
+            "body": dmCommandDefines
         });
         
         console.log("[zet-bot] 명령어가 등록되었습니다.");
