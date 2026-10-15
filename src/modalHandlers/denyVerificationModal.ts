@@ -29,5 +29,8 @@ export default async function denyVerificationModal(interaction: ModalSubmitInte
     }
 
     dm.send("계정 인증이 거부되었어요. DM에서 `/인증` 커맨드를 실행해 인증 절차를 재실시해주세요.\n사유: " + reason);
-    await interaction.reply("계정 인증 요청을 거부하였습니다.");
+    await interaction.reply({
+        "content": "계정 인증을 거부했습니다.",
+        "flags": MessageFlags.Ephemeral
+    });
 };

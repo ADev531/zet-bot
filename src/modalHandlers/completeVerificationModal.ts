@@ -34,5 +34,8 @@ export default async function completeVerificationModal(interaction: ModalSubmit
     }
 
     await dm.send("계정 인증이 완료되었어요! 등록된 제타 핸들은 `" + zetaHandle + "`입니다.\n\n**중요 사항: 혹시 등록된 핸들이 틀리거나 이후 제타 핸들을 변경하셨다면, DM에서 `/인증` 명령어를 실행해 다시 인증해주셔야 해요.**");
-    await interaction.deferUpdate();
+    await interaction.reply({
+        "content": "계정 인증을 완료했습니다.",
+        "flags": MessageFlags.Ephemeral
+    });
 }
