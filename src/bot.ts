@@ -103,6 +103,7 @@ client.on(Events.InteractionCreate, async(interaction) => {
                     .setCustomId("zetaHandle")
                     .setStyle(TextInputStyle.Short)
                     .setPlaceholder("@핸들")
+                    .setValue("@")
                     .setRequired(true);
                 const handleInputLabel = new LabelBuilder()
                     .setLabel("제타 핸들")
