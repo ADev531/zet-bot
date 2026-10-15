@@ -41,7 +41,7 @@ const rest = client.rest;
 
 const verifyCommand = new SlashCommandBuilder()
     .setName("인증")
-    .setDescription("인증 절차를 재실시합니다.");
+    .setDescription("인증 혹은 재인증 절차를 실시합니다. (DM 전용)");
 
 const zetaCommand = new SlashCommandBuilder()
     .setName("제타")
