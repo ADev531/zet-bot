@@ -1,7 +1,6 @@
-import { Client, Events, GatewayIntentBits, SlashCommandBuilder, Routes, ButtonBuilder, ButtonStyle, MessageFlags, ActionRowBuilder, ContainerBuilder, FileUploadBuilder, LabelBuilder, ModalBuilder, TextInputBuilder, TextInputStyle, Interaction, ActivityType, GuildMember, User } from "discord.js";
-import { prepare, redisClient } from "@/global.js";
-import zeta from "@/commands/zeta.js";
-import verify from "@/commands/verify.js";
+import { Client, Events, GatewayIntentBits, Routes, LabelBuilder, ModalBuilder, TextInputBuilder, TextInputStyle, ActivityType } from "discord.js";
+import { prepare } from "@/global.js";
+import { guildCommands, dmCommands } from "@/commands/index.js"; 
 import verifyModal from "@/modalHandlers/verifyModal.js";
 import completeVerificationModal from "@/modalHandlers/completeVerificationModal.js";
 import guildMemberAdd from "@/events/guildMemberAdd.js";
@@ -23,19 +22,6 @@ const client = new Client({
 
 const rest = client.rest;
 
-const verifyCommand = new SlashCommandBuilder()
-    .setName("인증")
-    .setDescription("인증 혹은 재인증 절차를 실시합니다. (DM 전용)");
-
-const zetaCommand = new SlashCommandBuilder()
-    .setName("제타")
-    .setDescription("유저의 제타 핸들을 확인합니다.")
-    .addUserOption(function(option) {
-        return option.setName("유저")
-            .setDescription("확인할 유저")
-            .setRequired(true);
-    });
-
 client.once(Events.ClientReady, async(readyClient) => {
 	console.log(`[zet-bot] ${readyClient.user.tag}으로 로그인되었습니다!`);
 
@@ -47,15 +33,11 @@ client.once(Events.ClientReady, async(readyClient) => {
     }
 
     try {
-        rest.put(Routes.applicationCommands(process.env.APPLICATION_ID), {
-            "body": [
-                verifyCommand.toJSON()
-            ]
-        });
         rest.put(Routes.applicationGuildCommands(process.env.APPLICATION_ID, process.env.GUILD_ID), {
-            "body": [
-                zetaCommand.toJSON()
-            ]
+            "body": guildCommands
+        });
+        rest.put(Routes.applicationCommands(process.env.APPLICATION_ID), {
+            "body": dmCommands
         });
         
         console.log("[zet-bot] 명령어가 등록되었습니다.");
@@ -164,11 +146,16 @@ client.on(Events.InteractionCreate, async(interaction) => {
         return;
     }
     else if (interaction.isChatInputCommand()){
-        if (interaction.commandName === "인증") {
-            verify(interaction);
+        if (guildCommands[interaction.commandName]) {
+            guildCommands[interaction.commandName].callback(interaction);
         }
-        else if (interaction.commandName === "제타") {
-            zeta(interaction);
+        else if (dmCommands[interaction.commandName]) {
+            if (interaction.inGuild()) {
+                await interaction.reply("해당 명령어는 DM에서 실행하셔야 합니다.");
+                return;
+            }
+
+            dmCommands[interaction.commandName].callback(interaction);
         }
     }
 });
