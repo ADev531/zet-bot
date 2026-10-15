@@ -9,7 +9,7 @@ export default async function verifyCommand(interaction: ChatInputCommandInterac
 
     if (!guild.members.cache.get(interaction.user.id)) {
         await interaction.reply({
-            "content": "해당 명령어는 제타 비공식 커뮤니티 서버에 들어가 있는 상태로만 사용하실 수 있어요.",
+            "content": "해당 명령어는 제타 비공식 커뮤니티 서버에 가입되어 있으셔야 사용하실 수 있어요.",
             "flags": MessageFlags.Ephemeral
         });
         return;
