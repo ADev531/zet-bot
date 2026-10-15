@@ -2,7 +2,7 @@ import { ChatInputCommandInteraction, CacheType, MessageFlags, ContainerComponen
 import { guild, redisClient, requestChannel } from "@/global.js";
 
 export default async function verifyCommand(interaction: ChatInputCommandInteraction<CacheType>) {
-    if (!interaction.channel?.isDMBased) {
+    if (!interaction.channel?.isDMBased()) {
         await interaction.reply("해당 명령어는 DM에서 실행해주셔야 합니다.");
         return;
     }
