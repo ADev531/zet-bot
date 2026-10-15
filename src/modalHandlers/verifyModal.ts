@@ -79,5 +79,5 @@ export default async function verifyModal(interaction: ModalSubmitInteraction<Ca
         ]
     });
 
-    interaction.reply("제출해주셔서 감사합니다. 서버 관리진이 확인할 때까지 잠시만 기다려 주세요! :)");
+    await interaction.reply("제출해주셔서 감사합니다. 서버 관리진이 확인할 때까지 잠시만 기다려 주세요! :)");
 }

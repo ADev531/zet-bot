@@ -28,7 +28,7 @@ export default async function zetaCommand(interaction: ChatInputCommandInteracti
     }
     else {
         await interaction.reply({
-            "content": "<@" + user.id + ">님의 제타 핸들은 " + zetaHandle + "입니다.",
+            "content": "<@" + user.id + ">님의 제타 핸들은 `" + zetaHandle + "`입니다.",
             "flags": MessageFlags.Ephemeral
         });
     }

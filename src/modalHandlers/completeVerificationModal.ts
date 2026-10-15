@@ -23,7 +23,7 @@ export default async function completeVerificationModal(interaction: ModalSubmit
 
     await redisClient.set("zetaHandle:" + user.id, zetaHandle);
     await message.edit({
-        "content": "<@" + user.id + ">님 인증 완료 처리 (" + new Intl.DateTimeFormat().format(Date.now()) + ")\n등록된 제타 핸들: " + zetaHandle,
+        "content": `<@${user.id}>님 인증 완료 처리 (${new Intl.DateTimeFormat().format(Date.now())})\n등록된 제타 핸들: \`${zetaHandle}\``,
         "components": []
     });
 
@@ -33,6 +33,6 @@ export default async function completeVerificationModal(interaction: ModalSubmit
         dm = await user.createDM(true);
     }
 
-    await dm.send("계정 인증이 완료되었어요!\n\n**중요 사항**: **혹시 제타 핸들을 변경하실 경우, DM에서 `/인증` 명령어를 실행해 다시 인증해주셔야 해요.**");
+    await dm.send("계정 인증이 완료되었어요! 등록된 제타 핸들은 `" + zetaHandle + "`입니다.\n\n**중요 사항: 혹시 등록된 핸들이 틀리거나 이후 제타 핸들을 변경하셨다면, DM에서 `/인증` 명령어를 실행해 다시 인증해주셔야 해요.**");
     await interaction.deferUpdate();
 }
