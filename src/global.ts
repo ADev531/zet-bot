@@ -18,4 +18,6 @@ export async function prepare(client : Client) {
 
     guild = await client.guilds.fetch(process.env.GUILD_ID) as Guild;
     requestChannel = await client.channels.fetch(process.env.REQUEST_CHANNEL_ID) as TextChannel;
+
+    await guild.members.fetch();
 }
