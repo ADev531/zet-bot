@@ -12,47 +12,6 @@ export default async function verifyCommand(interaction: ChatInputCommandInterac
         return;
     }
 
-    const zetaHandle = await redisClient.get("zetaHandle:" + interaction.user.id);
-
-    if (zetaHandle && zetaHandle !== "no_zeta") {
-        const reverifyBtn = new ButtonBuilder()
-            .setCustomId("reverify")
-            .setLabel("다시 인증하기")
-            .setStyle(ButtonStyle.Primary);
-        
-        const cancel = new ButtonBuilder()
-            .setCustomId("cancel")
-            .setLabel("취소")
-            .setStyle(ButtonStyle.Danger);
-
-        const row = new ActionRowBuilder()
-            .setComponents(reverifyBtn, cancel);
-
-        const msg = await interaction.reply({
-            "content": "현재 이미 인증이 완료된 상태에요. 재인증하실 건가요?\n-# (3분 이내로 선택하지 않으실 경우, 자동으로 취소돼요.)",
-            "components": [ row.toJSON() ]
-        });
-
-        try {
-            const result = await msg.awaitMessageComponent({ time: 180_000 });
-
-            if (result.customId === "cancel") {
-                await msg.edit({
-                    "content": "재인증이 취소되었어요! 만약 재인증하고 싶으시다면 DM에서 `/인증` 커맨드를 다시 실행해주세요.",
-                    "components": []
-                });
-                return;
-            }
-        }
-        catch {
-            await msg.edit({
-                "content": "선택이 3분 이내에 이루어지지지 않아 취소되었어요! 만약 재인증하고 싶으시다면 DM에서 `/인증` 커맨드를 다시 실행해주세요.",
-                "components": []
-            });
-            return;
-        }
-    }
-
     const fileUpload = new FileUploadBuilder()
         .setCustomId("screenshot")
         .setMinValues(1)
@@ -68,5 +27,5 @@ export default async function verifyCommand(interaction: ChatInputCommandInterac
         .setTitle("인증하기")
         .addLabelComponents(uploadLabel);
     
-    await interaction.showModal(verifyModal, { "withResponse": !interaction.replied });
+    await interaction.showModal(verifyModal);
 }
