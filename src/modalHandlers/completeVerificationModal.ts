@@ -33,9 +33,6 @@ export default async function completeVerificationModal(interaction: ModalSubmit
         dm = await user.createDM(true);
     }
 
-    await dm.send("계정 인증이 완료되었어요!\n\n**중요 사항**: **혹여라도 제타 핸들을 변경하실 경우, DM에서 `/인증` 명령어를 실행해 재인증을 실시해주셔야 해요.**");
-    await interaction.reply({
-        "content": "계정 인증을 완료하였습니다.",
-        "flags": MessageFlags.Ephemeral
-    });
+    await dm.send("계정 인증이 완료되었어요!\n\n**중요 사항**: **혹시 제타 핸들을 변경하실 경우, DM에서 `/인증` 명령어를 실행해 다시 인증해주셔야 해요.**");
+    await interaction.deferUpdate();
 }
