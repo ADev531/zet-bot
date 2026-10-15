@@ -56,11 +56,11 @@ client.once(Events.ClientReady, async(readyClient) => {
         "activities": [
             {
                 "name": "제타 피드 스크롤 중",
-                "type": ActivityType.Playing,
-                "state": "시뮬레이터가 어디 있지..."
+                "type": ActivityType.Watching,
+                "state": "시뮬레이터를 찾길 바라며"
             }
         ],
-        "status": "online"
+        "status": "dnd"
     });
 });
 
